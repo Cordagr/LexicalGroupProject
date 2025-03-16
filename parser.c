@@ -65,6 +65,7 @@ nodeType *term()
 
 nodeType *factor()
 {
+    nodeType * newNode;
     if(token == '(')
     {
         token = yylex();
