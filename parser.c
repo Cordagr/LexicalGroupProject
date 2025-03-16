@@ -95,6 +95,16 @@ nodeType *factor()
 
 nodeType *integer()
 {
+  if(isDigit(token))
+  {
+	int value = token - '0'; // to integer
+	nodeType *suffixNode = integer_suffix();
+	nodeType *newNode = createNewNumNode(value);
+	if(suffixNode)
+	{
+		//TODO:
+	} 
+  }
 }
 
 void abstractSyntaxTree()
