@@ -112,7 +112,7 @@ nodeType *integer()
   else
   {
 	printf("Invalid tokens in integer call");
-	  exit(1);
+	exit(1);
   }
 }
 
