@@ -65,6 +65,30 @@ nodeType *term()
 
 nodeType *factor()
 {
+    if(token == '(')
+    {
+        token = yylex();
+        newNode = expression(); // comsume expression between parenthesis
+        if (token == ')')
+        {
+            token = yylex(); // consume )
+        }
+        else
+        {
+            printf("Error: Missing parenthesis"); // no closing parenthesis matching
+            exit(1);
+        }
+    }
+    else if (token == INTEGER)
+    {
+        newNode = createNewNumNode(yyval); // create integer with lexeme value
+        yylex(); // consume created integer node
+    }
+    else
+    {
+        printf("Error: Invalid tokens in factor"); // no valid tokens for factor
+        exit(1);
+    }
 }
 
 nodeType *integer()
