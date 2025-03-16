@@ -98,14 +98,24 @@ nodeType *integer()
   if(isDigit(token))
   {
 	int value = token - '0'; // to integer
-	nodeType *suffixNode = integer_suffix();
-	nodeType *newNode = createNewNumNode(value);
-	if(suffixNode)
+	yylex();
+	nodeType *suffixNode = integer_suffix();;
+	while(suffixNode)
 	{
-		//TODO:
+	    value = value * 10 + (suffixNode->con.value);  // multi-digit number  
+            // next suffix digit if available
+            suffixNode = integer_suffix();
 	} 
+	nodeType *integer = createNewNumNode(value);
+	return newNode;
+  }
+  else
+  {
+	printf("Invalid tokens in integer call");
+	  exit(1);
   }
 }
+
 
 void abstractSyntaxTree()
 {
