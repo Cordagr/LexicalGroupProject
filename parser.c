@@ -89,6 +89,7 @@ nodeType *factor()
         printf("Error: Invalid tokens in factor"); // no valid tokens for factor
         exit(1);
     }
+	return newNode;
 }
 
 nodeType *integer()
