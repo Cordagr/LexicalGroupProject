@@ -99,7 +99,7 @@ nodeType *integer()
   {
 	int value = token - '0'; // to integer
 	yylex();
-	nodeType *suffixNode = integer_suffix();;
+	nodeType *suffixNode = integer_suffix();
 	while(suffixNode)
 	{
 	    value = value * 10 + (suffixNode->con.value);  // multi-digit number  
@@ -115,6 +115,20 @@ nodeType *integer()
 	  exit(1);
   }
 }
+
+nodeType *integer_suffix()
+{
+	nodeType *newNode = NULL;
+	if(idDigit(token))
+	{
+	    int value = token - '0';
+	    token = yylex();
+	    newNode = createNewNumNode(value);
+	}
+	return newNode;	
+}
+
+
 
 
 void abstractSyntaxTree()
