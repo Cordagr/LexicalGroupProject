@@ -82,7 +82,7 @@ nodeType *factor()
     }
     else if (token == INTEGER)
     {
-        newNode = createNewNumNode(yyval); // create integer with lexeme value
+        newNode = integer(); // create integer with lexeme value
         yylex(); // consume created integer node
     }
     else
