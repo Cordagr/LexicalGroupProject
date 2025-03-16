@@ -95,9 +95,9 @@ nodeType *factor()
 
 nodeType *integer()
 {
-  if(isDigit(token))
+  if(token == INTEGER)
   {
-	int value = token - '0'; // to integer
+	int value = yyval(); // to integer
 	yylex();
 	nodeType *suffixNode = integer_suffix();
 	while(suffixNode)
@@ -106,7 +106,7 @@ nodeType *integer()
             // next suffix digit if available
             suffixNode = integer_suffix();
 	} 
-	nodeType *integer = createNewNumNode(value);
+	nodeType *newNode = createNewNumNode(value);
 	return newNode;
   }
   else
