@@ -60,7 +60,7 @@ nodeType *term()
 		token=yylex();
 		newNode=createNewOprNode(oper, newNode,factor());
 	}
-
+	return newNode;
 }
 
 nodeType *factor()
