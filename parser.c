@@ -13,7 +13,7 @@ extern FILE *yyin; //The file input
 int token;
 
 //Creates a new number node, initializes the constant value
-nodeType *createNewNumNode(int type)
+nodeType *createNewNumNode(int value)
 {
 	nodeType *newNode = (nodeType *)malloc(sizeof(nodeType));
 	newNode->type=typeCon;
@@ -43,7 +43,7 @@ nodeType *expression()
 	{
 		int oper=token;
 		token=yylex();
-		node *rightTerm = term();
+		nodeType *rightTerm = term();
 		if (!rightTerm)
 		{
 			printf("Syntax error expected right term \n");
@@ -90,7 +90,6 @@ nodeType *factor()
     else if (token == INTEGER)
     {
         newNode = integer(); // create integer with lexeme value
-        yylex(); // consume created integer node
     }
     else
     {
@@ -104,7 +103,7 @@ nodeType *integer()
 {
   if(token == INTEGER)
   {
-	int value = yyval(); // to integer
+	int value = yylval; // to integer
 	token = yylex();
 	return createNewNumNode(value);
   }
@@ -116,10 +115,38 @@ nodeType *integer()
 }
 
 
-void abstractSyntaxTree()
+void printAST(nodeType * node, int depth)
 {
+if (!node)
+return;
+
+// indentation //
+for (int i=0;i<depth;i++)
+{
+	printf("    ");
+}
+	
+if (node -> type == typeCon)
+{
+	printf("%d(int)\n", node -> con.value);
+}
+else if (node -> type == typeOpr)
+{
+	printf("%c(operator)\n", node -> opr.oper);
+
+	// left opr recursive call //
+	printAST(node->opr.op[0], depth + 1);
+	// right opr recursive call //
+	printAST(node->opr.op[1], depth + 1);		
+}
 }
 
 int main(int argc, char *argv[])
-{
+{ 
+// TODO: call lexical reading from input and get tokens from lexical program and then call 
+token = yylex();
+nodeType *ast = expression();
+printAST(ast,0);
+return 0;
 }
+
