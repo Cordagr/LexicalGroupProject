@@ -2,15 +2,18 @@
 #include <stdlib.h>
 #include "calcy.tab.h"
 
+
 nodeType *createNewNumNode(int value);
 nodeType *createNewOprNode(int oper, nodeType *leftOp, nodeType *rightOp);
 nodeType *expression();
 nodeType *term();
 nodeType *factor();
 nodeType *integer();
-extern int yylval, yylex(); //(from lexical analyzer) yylval stores value of token and yylex() gets next token
+//extern int yylval; 
+//extern yylex(void); //(from lexical analyzer) yylval stores value of token and yylex() gets next token
 extern FILE *yyin; //The file input
 int token;
+
 
 //Creates a new number node, initializes the constant value
 nodeType *createNewNumNode(int value)
@@ -103,7 +106,7 @@ nodeType *integer()
 {
   if(token == INTEGER)
   {
-	int value = yylval; // to integer
+	int value = yylval.iValue; // to integer
 	token = yylex();
 	return createNewNumNode(value);
   }
@@ -149,4 +152,5 @@ nodeType *ast = expression();
 printAST(ast,0);
 return 0;
 }
+
 
