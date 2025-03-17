@@ -43,8 +43,15 @@ nodeType *expression()
 	{
 		int oper=token;
 		token=yylex();
-		newNode=createNewOprNode(oper, newNode, term());
+		node *rightTerm = term();
+		if (!rightTerm)
+		{
+			printf("Syntax error expected right term \n");
+			exit(1);
+		}
+		newNode=createNewOprNode(oper, newNode, rightTerm);
 	}
+	
 	return newNode;
 }
 
