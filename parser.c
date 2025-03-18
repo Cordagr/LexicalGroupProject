@@ -4,14 +4,16 @@
 #include <ctype.h>
 #include "lex.yy.c"
 
+
 nodeType *createNewNumNode(int value);
 nodeType *createNewOprNode(int oper, nodeType *leftOp, nodeType *rightOp);
 nodeType *expression();
 nodeType *term();
 nodeType *factor();
 nodeType *integer();
-extern FILE *yyin; 
+extern FILE *yyin; // The file input
 int token;
+
 
 nodeType *createNewNumNode(int value)
 {
@@ -22,60 +24,82 @@ nodeType *createNewNumNode(int value)
 }
 
 nodeType *createNewOprNode(int oper, nodeType *leftOp, nodeType *rightOp) {
+    printf("Entered createNewOprNode()\n");
+    
+   
     nodeType *newNode = (nodeType *)malloc(sizeof(nodeType));
     if (!newNode) {
         printf("Memory allocation failed for operator node.\n");
         exit(1);
     }
-
-    if (leftOp != NULL) {
-        printf("Left operand value: %d\n", leftOp->value);
-    } else {
-        printf("Left operand is NULL\n");
-    }
-
-    if (rightOp != NULL) {
-        printf("Right operand value: %d\n", rightOp->value);
-    } else {
-        printf("Right operand is NULL\n");
-    }
-
+    
+    printf("Memory allocated for newNode\n");
+    
+   
     newNode->type = typeOpr;
+    
+    printf("Set type to typeOpr\n");
+    
     newNode->opr.oper = oper; 
+    
+    printf("Set oper to %d\n", oper);
+    
     newNode->opr.nops = 2;    
+    
+    printf("Set nops to 2\n");
+    
 
     newNode->opr.op[0] = leftOp;
     newNode->opr.op[1] = rightOp;
-
+    
+    printf("Assigned operands\n");
+    printf("Exiting createNewOprNode()\n");
+    
     return newNode;
 }
 
-nodeType *expression() {
-    nodeType *newNode = term();
 
+nodeType *expression() {
+    printf("Starting expression()\n");
+    nodeType *newNode = term(); 
+    printf("After term() in expression(), token = %d\n", token);
+
+ 
     while (token == PLUS || token == MINUS) {
         printf("Found operator: %d\n", token); 
-        int oper = token;  
-        token = yylex();   
+        int oper = token; 
+        printf("About to call yylex()\n");
+        token = yylex(); 
+        printf("After yylex(), token = %d\n", token);
+        
+        printf("About to call term()\n");
         nodeType *secondNode = term();
+        printf("After term() call, secondNode = %p\n", (void*)secondNode);
+        
         if (secondNode == NULL) {
             printf("Failed to parse second term.\n");
             exit(1);
         }
-        newNode = createNewOprNode(oper, newNode, secondNode);  
-        printf("New node value: %d\n", newNode->opr.op[0]->value); 
+        
+        printf("About to call createNewOprNode(%d, %p, %p)\n", 
+               oper, (void*)newNode, (void*)secondNode);
+        newNode = createNewOprNode(oper, newNode, secondNode); 
+        printf("After createNewOprNode(), newNode = %p\n", (void*)newNode);
     }
+    
+    printf("Exiting expression()\n");
     return newNode;
 }
 
 nodeType *term() {
     printf("Token at term: %d\n", token);
-    nodeType *newNode = factor();
+    nodeType *newNode = factor(); 
+
 
     while (token == MULT || token == DIV) {
         int oper = token;
-        token = yylex();
-        newNode = createNewOprNode(oper, newNode, factor());
+        token = yylex(); // Get next token
+        newNode = createNewOprNode(oper, newNode, factor()); 
     }
     return newNode;
 }
@@ -95,13 +119,13 @@ nodeType *factor() {
             exit(1); 
         }
     }
-    else if (token == INTEGER) { 
+    else if (token == INTEGER) { // If token is an integer, create a number node
         printf("Found INTEGER token: %d\n", yylval.iValue);
-        newNode = integer(); 
+        newNode = integer(); // Create number node
     }
     else {
         printf("Error: Invalid token in factor: %d\n", token);
-        exit(1); 
+        exit(1); // Error if invalid token
     }
 
     return newNode;
@@ -109,10 +133,10 @@ nodeType *factor() {
 
 nodeType *integer() {
     int value = yylval.iValue;  
-    nodeType *newNode = createNewNumNode(value);  
-    printf("Created new node with value: %d\n", newNode->value);
+    nodeType *newNode = createNewNumNode(value); 
+    printf("Created new node with value: %d\n", newNode->value); 
     printf("Current token: %d\n", token);
-    token = yylex();  
+    token = yylex(); 
     printf("Next token: %d\n", token);
     return newNode;
 }
@@ -155,8 +179,15 @@ int main()
 
     nodeType *ast = expression();
 
+     
+      if (token != 0 && token != '\n') {  // 0 or '\n' usually indicates end of input
+        printf("Warning: Unexpected tokens after expression: %d\n", token);
+    }
+
+
     printf("\nAbstract Syntax Tree:\n");
     printAST(ast, 0);
+    printf("AST finished printing");
 
     return 0;
 }
