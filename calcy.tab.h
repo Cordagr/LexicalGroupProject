@@ -1,7 +1,24 @@
 #ifndef CALCY_TAB_H
 #define CALCY_TAB_H
 
-typedef enum { typeCon, typeId, typeOpr } nodeEnum;
+/* Token definitions */
+#define PLUS  1
+#define MINUS 2
+#define MULT  3
+#define DIV   4
+#define INTEGER 5
+#define LPAREN 6
+#define RPAREN 7
+#define ELSE 8
+#define PRINT 9 
+#define ERROR 10
+#define LE 11
+#define WHILE 12
+#define IF 13
+#define VARIABLE 14
+#define EQ 15
+#define GE 16
+typedef enum { typeCon, typeOpr } nodeEnum;
 
 /* Constants */
 typedef struct {
@@ -9,42 +26,27 @@ typedef struct {
     int value;     /* value of constant */
 } conNodeType;
 
-/* Identifiers */
-typedef struct {
-    nodeEnum type; /* type of node */
-    int i;         /* subscript to ident array */
-} idNodeType;
+
 
 /* Operators */
-typedef struct {
+typedef struct nodeTypeTag {
     nodeEnum type; /* type of node */
-    int oper;      /* operator */
-    int nops;      /* number of operands */
-    union nodeTypeTag *op[1]; /* operands (expandable) */
-} oprNodeType;
-
-typedef union nodeTypeTag {
-    nodeEnum type;   /* type of node */
-    conNodeType con; /* constants */
-    idNodeType id;   /* identifiers */
-    oprNodeType opr; /* operators */
+    union {
+        int value; /* for constant numbers */
+        struct {  /* for operator nodes */
+            int oper;     /* operator */
+            int nops;     /* number of operands */
+            struct nodeTypeTag **op;  /* operands (expandable array of pointers) */
+        } opr;
+    };
 } nodeType;
 
+/* External variable declaration for yylval */
+ union {
+    int iValue;  // Integer value for constants
+    int sIndex;  // Not used in current code, but can be for symbol table indices or other uses
+} yylval;
 
-
-
-extern int sym[26];  // Symbol table for variable names
-
-/* Token definitions */
-#define INTEGER 1
-#define VARIABLE 2
-#define GE 3
-#define LE 4
-#define EQ 5
-#define WHILE 6
-#define IF 7
-#define ELSE 8
-#define PRINT 9
-#define OPERATOR 10
 
 #endif /* CALCY_TAB_H */
+
