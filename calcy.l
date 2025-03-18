@@ -32,10 +32,10 @@ void yyerror(const char *s) {
 "-"          { printf("- operator\n"); return MINUS; }
 "*"          { printf("* operator\n"); return MULT; }
 "/"          { printf("/ operator\n"); return DIV; }
-"("          { printf("( operator\n"); return '('; }
-")"          { printf(") operator\n"); return ')'; }
+"("          { printf("( operator\n"); return LPAREN; }
+")"          { printf(") operator\n"); return RPAREN; }
 "="          { printf("= operator\n"); return EQ; }
-";"          { printf("; operator\n"); return ';'; }
+";"          { printf("; operator\n"); return SEMI;}
 ">="         { printf(">= operator\n"); return GE; }
 "<="         { printf("<= operator\n"); return LE; }
 "=="         { printf("== operator\n"); return EQ; }
