@@ -24,7 +24,9 @@ void yyerror(const char *s) {
     return INTEGER;
 }
 
-[ \t\n\r]+   { /* Ignore whitespace */ }
+[ \t\r]+   { /* Ignore whitespace */ }
+\n   { printf("End of line\n"); return 0; }  /* Return 0 for end of input */
+
 
 "+"          { printf("+ operator\n"); return PLUS; }
 "-"          { printf("- operator\n"); return MINUS; }
