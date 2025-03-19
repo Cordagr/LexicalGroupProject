@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include "calcy.tab.h"
 #include <ctype.h>
-#include "lex.yy.c"
 
 
 nodeType *createNewNumNode(int value);
@@ -12,6 +11,7 @@ nodeType *term();
 nodeType *factor();
 nodeType *integer();
 extern FILE *yyin; 
+extern int yylex();
 int token;
 
 // nodes for integer tokens//
