@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "calcy.tab.h"
 #include <ctype.h>
+extern int yylex();
 
 
 nodeType *createNewNumNode(int value);
@@ -11,7 +12,6 @@ nodeType *term();
 nodeType *factor();
 nodeType *integer();
 extern FILE *yyin; 
-extern int yylex();
 int token;
 
 // nodes for integer tokens//
@@ -127,6 +127,7 @@ void printAST(nodeType *node, int depth)
     if (!node)
         return;
 
+   
     for (int i = 0; i < depth; i++)
         printf("    ");
 
@@ -136,13 +137,18 @@ void printAST(nodeType *node, int depth)
     }
     else if (node->type == typeOpr)
     {
-        // if operator return its token based on token value stored earlier //
-        printf("%s (operator)\n", 
-               (node->opr.oper == PLUS) ? "+" : (node->opr.oper == MINUS) ? "-"
-                                         : (node->opr.oper == MULT)   ? "*"
-                                         : (node->opr.oper == DIV)   ? "/"
-                                         : "?");
+        
+        printf("%c (%s)\n", 
+               (node->opr.oper == PLUS)  ? '+' :
+               (node->opr.oper == MINUS) ? '-' :
+               (node->opr.oper == MULT)  ? '*' :
+               (node->opr.oper == DIV)   ? '/' : '?',
+               (node->opr.oper == PLUS)  ? "Add" :
+               (node->opr.oper == MINUS) ? "Minus" :
+               (node->opr.oper == MULT)  ? "Multiply" :
+               (node->opr.oper == DIV)   ? "Divide" : "Unknown");
 
+    
         if (node->opr.op[0]) 
             printAST(node->opr.op[0], depth + 1);
         if (node->opr.op[1])
@@ -150,20 +156,6 @@ void printAST(nodeType *node, int depth)
     }
 }
 
-void freeAST(nodeType *node)
-{
-        if (!node) return;
-        if (node->type == typeOpr)
-        {
-                //free left operand
-                if (node->opr.op[0])
-                        freeAST(node->opr.op[0]);
-                //free right operand
-                if (node->opr.op[1])
-                        freeAST(node->opr.op[1]);
-        }
-        free(node);
-}
 
 int main()
 {
@@ -184,6 +176,7 @@ int main()
     printf("\nAbstract Syntax Tree:\n");
     printAST(ast, 0);
     printf("AST finished printing");
-    freeAST(ast);
+
     return 0;
 }
+
