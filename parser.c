@@ -156,6 +156,21 @@ void printAST(nodeType *node, int depth)
     }
 }
 
+void freeAST(nodeType *node)
+{
+        if (!node) return;
+        if (node->type == typeOpr)
+        {
+                //free left operand
+                if (node->opr.op[0])
+                        freeAST(node->opr.op[0]);
+                //free right operand
+                if (node->opr.op[1])
+                        freeAST(node->opr.op[1]);
+        }
+        free(node);
+}
+
 
 int main()
 {
@@ -176,7 +191,7 @@ int main()
     printf("\nAbstract Syntax Tree:\n");
     printAST(ast, 0);
     printf("AST finished printing");
-
+    freeAST(ast);
     return 0;
 }
 
